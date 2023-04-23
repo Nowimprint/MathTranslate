@@ -1,0 +1,156 @@
+
+<IndexPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './static/index.jpg'
+
+
+    Label:
+        id: 'title_label'
+        text: '[ref="click"][b]MathTranslate[/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 72  # 24
+        pos_hint: {"center_x":0.5,"y":0.2}
+        markup: True
+        on_ref_press: root.page_go()
+
+    Label:
+        text: '[b]v2.1.11[/b]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 45  #18
+        pos_hint: {"center_x":0.5,"y":0.0}
+        markup: True
+
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1,.1)
+        spacing: 50
+        padding: 100,0
+        pos_hint: {"center_x":0.5,"y":0.2}
+
+        Button:
+            text: "[b]Load Latex File[/b]"
+            markup: True
+            on_press:root.show_load()
+
+        Button:
+            text: "[b]Preferences[/b]"
+            markup: True
+            on_release: root.page_preferences()
+
+        Button:
+            text: "[b]Translate[/b]"
+            markup: True
+            on_release: root.translate_load()
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+            rootpath: root.cwdir
+            filters: ['*.tex']
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: .1
+            multiline: False
+
+
+        BoxLayout:
+            size_hint_y: .1
+            spacing: 30
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(filechooser.path,text_input.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
+
+<TranslationDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        spacing: 30
+
+        Label:
+            text: '[b]Choose Output File Path:[/b][/ref]'
+            color: kivy.utils.get_color_from_hex('#FFFFFF')
+            font_size: 20  # 24
+            markup: True
+            size_hint_y: .1
+
+        FileChooserIconView:
+            size_hint_y: .6
+            id: filechooser
+            rootpath: root.cwdir
+            dirselect: True
+            filters: ['*.im']
+            on_selection: file_output.text = (self.selection and self.selection[0] or '') + '\\translate.tex'
+
+        TextInput:
+            id: file_output
+            size_hint_y: .1
+            multiline: False
+
+
+        BoxLayout:
+            size_hint_y: .1
+            spacing: 30
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(file_output.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
+
+<DownloadDialog>:
+    orientation: "vertical"
+    Label:
+        text: '[ref="click"][b]The mathtranslate had not been installed \n Or is not latest. \n\n Are you sure to Download it ?[/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#FFFFFF')
+        font_size: 15 # 24
+        markup: True
+        size_hint_y: .2
+
+    BoxLayout:
+        size_hint_y: .05
+        spacing: 30
+        Button:
+            text: "[b]Conform[/b]"
+            on_release: root.download()
+            markup: True
+        Button:
+            text: "[b]Cancel[/b]"
+            on_release: root.cancel()
+            markup: True
+
+<SuccessDialog>:
+    orientation: "vertical"
+    Label:
+        text: '[ref="click"][b]Successfully![/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#FFFFFF')
+        font_size: 15 # 24
+        markup: True
+        size_hint_y: .2
+    Button:
+        size_hint_y: .05
+        text: "[b]Confrim[/b]"
+        on_release: root.cancel()
+        markup: True
+

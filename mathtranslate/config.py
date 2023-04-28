@@ -16,6 +16,8 @@ def set_variable(path, default):
     else:
         return default
 
+def set_variable_4ui(path, default):
+    return print(default, file=open(f'{ROOT}/{path}', 'w'))
 
 def reread():
     global default_engine, default_language_from, default_language_to, tencent_secret_id, tencent_secret_key

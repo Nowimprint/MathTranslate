@@ -56,9 +56,11 @@
         FileChooserIconView:
             id: filechooser
             rootpath: root.cwdir
-            filters: ['*.tex']
-            on_selection: text_input.text = self.selection and self.selection[0] or ''
-
+            dirselect: True
+            filters: ['*']
+            # on_selection: root.dispatch('on_selection', args[1])
+            on_selection: text_input.text = self.selection and (self.selection[0].encode('utf-8')) or ''
+            file_encodings:['utf-8']
         TextInput:
             id: text_input
             size_hint_y: .1
@@ -69,7 +71,7 @@
             size_hint_y: .1
             spacing: 30
             Button:
-                text: "[b]Conform[/b]"
+                text: "[b]Confirm[/b]"
                 on_release: root.load(filechooser.path,text_input.text)
                 markup: True
 
@@ -102,15 +104,16 @@
 
         TextInput:
             id: file_output
-            size_hint_y: .1
+            size_hint_y: .3
             multiline: False
+            text:
 
 
         BoxLayout:
             size_hint_y: .1
             spacing: 30
             Button:
-                text: "[b]Conform[/b]"
+                text: "[b]Confirm[/b]"
                 on_release: root.load(file_output.text)
                 markup: True
 
@@ -132,8 +135,8 @@
         size_hint_y: .05
         spacing: 30
         Button:
-            text: "[b]Conform[/b]"
-            on_release: root.download()
+            text: "[b]Confirm[/b]"
+            on_release: root.load()
             markup: True
         Button:
             text: "[b]Cancel[/b]"
@@ -150,7 +153,12 @@
         size_hint_y: .2
     Button:
         size_hint_y: .05
-        text: "[b]Confrim[/b]"
+        text: "[b]Confirm[/b]"
         on_release: root.cancel()
         markup: True
 
+<WaitingDialog>
+    TextInput:
+        id: text_output
+        size_hint_y: .8
+        multiline: True

@@ -24,7 +24,7 @@
             text: '[ref="click"][b]Language Setting:[/b][/ref]'
             color: kivy.utils.get_color_from_hex('#0081CF')
             font_size: 30  # 24
-            pos_hint: {"y":0.15,"x":-0.2}
+            pos_hint: {"y":0,"x":-0.2}
             markup: True
 
 
@@ -36,16 +36,15 @@
             values: 'Google', 'Tencent'
             on_text:
                 root.engine_show_load(self.text)
-                print("The spinner {} has text {}".format(self, self.text))
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint: 0.2, 0.08
-            pos_hint: {'x':0.7, 'top': 0.7}
+            pos_hint: {'x':0.7, 'top': 0.55}
 
             Button:
-                id: 'language_setting'
-                text: 'Choose'
+                id: language_setting
+                text: " "
                 markup: True
                 on_press:root.language_show_load()
 
@@ -102,7 +101,7 @@
             spacing: 30
             size_hint_y: .1
             Button:
-                text: "[b]Conform[/b]"
+                text: "[b]Confirm[/b]"
                 on_release: root.load(id_input.text,key_input.text)
                 markup: True
 
@@ -120,118 +119,57 @@
         spacing: 100
 
         BoxLayout:
-            ScrollView:
-                size_hint: 1, 0.8
-                do_scroll_x: False
-                do_scroll_y: True
-
-                Label:
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                    text_size: self.width, None
-                    padding: 10, 10
-                    text:
-                        '''
-                        Afrikaans            af
-                        Irish                ga
-                        Albanian             sq
-                        Italian              it
-                        Arabic               ar
-                        Japanese             ja
-                        Azerbaijani          az
-                        Kannada              kn
-                        Basque               eu
-                        Korean               ko
-                        Bengali              bn
-                        Latin                la
-                        Belarusian           be
-                        Latvian              lv
-                        Bulgarian            bg
-                        Lithuanian           lt
-                        Catalan              ca
-                        Macedonian           mk
-                        Chinese_Simplified   zh-CN
-                        Malay                ms
-                        Chinese_Traditional  zh-TW
-                        Maltese              mt
-                        Croatian             hr
-                        Norwegian            no
-                        Czech                cs
-                        Persian              fa
-                        Danish               da
-                        Polish               pl
-                        Dutch                nl
-                        Portuguese           pt
-                        English              en
-                        Romanian             ro
-                        Esperanto            eo
-                        Russian              ru
-                        Estonian             et
-                        Serbian              sr
-                        Filipino             tl
-                        Slovak               sk
-                        Finnish              fi
-                        Slovenian            sl
-                        French               fr
-                        Spanish              es
-                        Galician             gl
-                        Swahili              sw
-                        Georgian             ka
-                        Swedish              sv
-                        German               de
-                        Tamil                ta
-                        Greek                el
-                        Telugu               te
-                        Gujarati             gu
-                        Thai                 th
-                        Haitian_Creole       ht
-                        Turkish              tr
-                        Hebrew               iw
-                        Ukrainian            uk
-                        Hindi                hi
-                        Urdu                 ur
-                        Hungarian            hu
-                        Vietnamese           vi
-                        Icelandic            is
-                        Welsh                cy
-                        Indonesian           id
-                        Yiddish              yi
-                        '''
 
             BoxLayout:
-                orientation: "vertical"
+                orientation: 'vertical'
                 Label:
                     text: '[ref="click"][b]Translate from:[/b][/ref]'
                     color: kivy.utils.get_color_from_hex('#FFFFFF')
                     font_size: 24  # 24
                     markup: True
                     size_hint_y: .2
+                ScrollView:
+                    size_hint: 1, 0.8
+                    do_scroll_x: False
+                    do_scroll_y: True
 
-                TextInput:
-                    id: trans_from
-                    size_hint_y: .1
-                    multiline: False
+                    Spinner:
+                        id:trans_from
+                        size_hint: 1, 0.2
+                        text: 'English'
+                        values: 'Afrikaans','Irish','Albanian','Italian','Arabic','Japanese','Azerbaijani','Kannada','Basque','Korean','Bengali','Latin','Belarusian','Latvian','Bulgarian','Lithuanian','Catalan','Macedonian','Chinese Simplified','Malay','Chinese Traditional','Maltese','Croatian','Norwegian','Czech','Persian','Danish','Polish','Dutch','Portuguese','English','Romanian','Esperanto','Russian','Estonian','Serbian','Filipino','Slovak','Finnish','Slovenian','French','Spanish','Galician','Swahili','Georgian','Swedish','German','Tamil','Greek','Telugu','Gujarati','Thai','Haitian Creole','Turkish','Hebrew','Ukrainian','Hindi','Urdu','Hungarian','Vietnamese','Icelandic','Welsh','Indonesian','Yiddish'
 
+
+
+
+
+            BoxLayout:
+                orientation: 'vertical'
                 Label:
-
                     text: '[ref="click"][b]to:[/b][/ref]'
                     color: kivy.utils.get_color_from_hex('#FFFFFF')
                     font_size: 24  # 24
                     markup: True
                     size_hint_y: .2
+                ScrollView:
+                    size_hint: 1, 0.8
+                    do_scroll_x: False
+                    do_scroll_y: True
 
-                TextInput:
-                    id: trans_to
-                    size_hint_y: .1
-                    multiline: False
+                    Spinner:
+                        id:trans_to
+                        size_hint: 1, 0.2
+                        text: 'Chinese Simplified'
+                        values: 'Afrikaans','Irish','Albanian','Italian','Arabic','Japanese','Azerbaijani','Kannada','Basque','Korean','Bengali','Latin','Belarusian','Latvian','Bulgarian','Lithuanian','Catalan','Macedonian','Chinese Simplified','Malay','Chinese Traditional','Maltese','Croatian','Norwegian','Czech','Persian','Danish','Polish','Dutch','Portuguese','English','Romanian','Esperanto','Russian','Estonian','Serbian','Filipino','Slovak','Finnish','Slovenian','French','Spanish','Galician','Swahili','Georgian','Swedish','German','Tamil','Greek','Telugu','Gujarati','Thai','Haitian Creole','Turkish','Hebrew','Ukrainian','Hindi','Urdu','Hungarian','Vietnamese','Icelandic','Welsh','Indonesian','Yiddish'
+
 
 
         BoxLayout:
             spacing: 30
             size_hint_y: .1
             Button:
-                text: "[b]Conform[/b]"
-                on_release: root.load(trans_to.text,trans_from.text)
+                text: "[b]Confirm[/b]"
+                on_release: root.load(trans_from.text,trans_to.text)
                 markup: True
 
             Button:

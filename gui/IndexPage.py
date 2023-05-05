@@ -1,11 +1,15 @@
 import importlib
 import os
+import sys
+from io import StringIO
 
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 
-from Dialog import LoadDialog, TranslationDialog, DownloadDialog, DownloadDialogEncapsulation, SuccessDialog
+from Dialog import LoadDialog, TranslationDialog, DownloadDialog, DownloadDialogEncapsulation, SuccessDialog, \
+    WaitingDialog
 
 
 class IndexPage(FloatLayout):
@@ -13,7 +17,7 @@ class IndexPage(FloatLayout):
     def __init__(self, config, **kwargs):
         super().__init__(**kwargs)
         self.config = config
-        self.dde = DownloadDialogEncapsulation()
+        self.dde = DownloadDialogEncapsulation(self.config)
         self.config.updated = False
         try:
             importlib.import_module('mathtranslate')
@@ -33,22 +37,27 @@ class IndexPage(FloatLayout):
     def show_load(self):
         # 绑定加载和取消的方法
         # content = LoadDialog(load=self._load,cancel=self.dismiss_popup,cwdir=os.getcwd())
-        content = LoadDialog(load=self._load, cancel=self.dismiss_popup, cwdir="../")
+        content = LoadDialog(load=self._load, cancel=self.dismiss_popup)
         self._popup = Popup(title="Load Latex File", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def _load(self, path, filename):
+        content = SuccessDialog(cancel=self.success_dismiss_popup)
+        self.success_popup = Popup(title="Successful Loading", content=content, size_hint=(.4, .5))
         self.dismiss_popup()
         self.config.file_path = filename
+        self.success_popup.open()
 
     def dismiss_popup(self):
         self._popup.dismiss()
 
     def translate_load(self):
-        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup, cwdir='../',
+        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup,
                                     file=self.config.file_path)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
+
+
 
     def trans_load(self, output_path):
         self.config.output_path = output_path
@@ -59,6 +68,7 @@ class IndexPage(FloatLayout):
     def translate(self):
         if not self.config.updated:
             self.dde.download_load()
+            self.config.updated = True
 
         else:
             from Translate import translate
@@ -67,8 +77,9 @@ class IndexPage(FloatLayout):
 
     def success_load(self):
         content = SuccessDialog(cancel=self.success_dismiss_popup)
-        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.success_popup = Popup(title="Successful Loading", content=content, size_hint=(.4, .5))
         self.success_popup.open()
 
     def success_dismiss_popup(self):
         self.success_popup.dismiss()
+

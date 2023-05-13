@@ -27,24 +27,28 @@ class LanguageDialog(FloatLayout):
 
 
 class TranslationDialog(FloatLayout):
-
     file = ObjectProperty(None)
-    cwdir = ObjectProperty(None)
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
+    dirname = ObjectProperty(None)
 
+    @staticmethod
+    def get_translate_output(selection):
+        if selection:
+            selected = selection[0]
+            if os.path.isdir(selected):
+                return os.path.join(selected, 'translate.tex')
+            else:
+                return selected
 
 
 class WaitingDialog(FloatLayout):
-
     pass
 
 
 class DownloadDialog(BoxLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
-
-
 
 
 class SuccessDialog(BoxLayout):
@@ -54,6 +58,7 @@ class SuccessDialog(BoxLayout):
 class DownloadDialogEncapsulation:
     def __init__(self, config):
         self.config = config
+
     def download_load(self):
         content = DownloadDialog(load=self.download, cancel=self.download_dismiss_popup)
         self.down_popup = Popup(title="Update the MathTranslate", content=content, size_hint=(.4, .5))

@@ -9,7 +9,7 @@ from Config import Config
 from Dialog import EngineDialog, LanguageDialog
 from IndexPage import IndexPage
 from PreferencesPage import PreferencesPage
-import win32timezone
+#import win32timezone
 
 class MathTranslate(App):
     def __init__(self, config, **kwargs):
@@ -17,7 +17,7 @@ class MathTranslate(App):
         self.para_config = config
 
     def build(self):
-        self.icon = "./static/icon.ico"
+        #self.icon = "./static/icon.ico"
         self.title = "MathTranslate App"
 
         self.load_kv("guipage/index.kv")  # create a index.kv file

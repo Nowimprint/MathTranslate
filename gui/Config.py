@@ -2,7 +2,7 @@
 class Config:
 
     def __init__(self):
-        self.file_path = "None"
+        self.file_path = None
         self.output_path = './'
         self.engine = 'google'
         self.language_from = 'en'
@@ -14,7 +14,3 @@ class Config:
         self.tencent_secret_key_path = 'TENCENT_KEY'
 
         self.updated = False
-
-
-
-

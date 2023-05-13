@@ -8,7 +8,6 @@
             size: self.size
             source: './static/index.jpg'
 
-
     Label:
         id: 'title_label'
         text: '[ref="click"][b]MathTranslate[/b][/ref]'
@@ -25,6 +24,13 @@
         pos_hint: {"center_x":0.5,"y":0.0}
         markup: True
 
+    Label:
+        id: loaded_filename
+        text: 'No file loaded'
+        color: kivy.utils.get_color_from_hex('#000000')
+        font_size: 18  #18
+        pos_hint: {"center_x":0.5,"y":-0.4}
+        markup: True
 
     BoxLayout:
         orientation: 'horizontal'
@@ -34,16 +40,19 @@
         pos_hint: {"center_x":0.5,"y":0.2}
 
         Button:
+            id: load_button
             text: "[b]Load Latex File[/b]"
             markup: True
-            on_press:root.show_load()
+            on_press: root.show_load()
 
         Button:
+            id: preference_button
             text: "[b]Preferences[/b]"
             markup: True
             on_release: root.page_preferences()
 
         Button:
+            id: translate_button
             text: "[b]Translate[/b]"
             markup: True
             on_release: root.translate_load()
@@ -53,9 +62,9 @@
         size: root.size
         pos: root.pos
         orientation: "vertical"
-        FileChooserIconView:
+        FileChooserListView:
             id: filechooser
-            rootpath: root.cwdir
+            path: root.cwdir
             dirselect: True
             filters: ['*']
             # on_selection: root.dispatch('on_selection', args[1])
@@ -94,19 +103,19 @@
             markup: True
             size_hint_y: .1
 
-        FileChooserIconView:
+        FileChooserListView:
             size_hint_y: .6
             id: filechooser
-            rootpath: root.cwdir
+            path: root.dirname
             dirselect: True
-            filters: ['*.im']
-            on_selection: file_output.text = (self.selection and self.selection[0] or '') + '\\translate.tex'
+            filters: ['*', '.']
+            on_selection: file_output.text = root.get_translate_output(self.selection)
 
         TextInput:
             id: file_output
-            size_hint_y: .3
+            size_hint_y: .1
             multiline: False
-            text:
+            text: root.file
 
 
         BoxLayout:

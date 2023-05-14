@@ -1,20 +1,13 @@
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
-
-import sys
-
-from Config import Config
-from Dialog import EngineDialog, LanguageDialog
 from IndexPage import IndexPage
 from PreferencesPage import PreferencesPage
-#import win32timezone
+import sys
+
 
 class MathTranslate(App):
-    def __init__(self, config, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.para_config = config
 
     def build(self):
         #self.icon = "./static/icon.ico"
@@ -24,7 +17,7 @@ class MathTranslate(App):
         self.load_kv("guipage/preferencespage.kv")  # create a image.kv file
 
         self.screen_manager = ScreenManager()
-        pages = {"Index_page": IndexPage(self.para_config), "Preferences_page": PreferencesPage(self.para_config)}
+        pages = {"Index_page": IndexPage(), "Preferences_page": PreferencesPage()}
 
         for item, page in pages.items():
             self.default_page = page
@@ -38,5 +31,4 @@ class MathTranslate(App):
 
 if __name__ == "__main__":
     sys.setrecursionlimit(50000)
-    config = Config()
-    MathTranslate(config).run()
+    MathTranslate().run()

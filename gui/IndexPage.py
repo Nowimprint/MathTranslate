@@ -1,34 +1,32 @@
 import importlib
 import os
-import sys
-from io import StringIO
 
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
-import time
 
-from Dialog import LoadDialog, TranslationDialog, DownloadDialog, DownloadDialogEncapsulation, SuccessDialog, \
-    WaitingDialog
+from Dialog import LoadDialog, SavePathDialog, DownloadDialog, DownloadDialogEncapsulation, SuccessDialog, WaitingDialog, TranslationDialog
+import re
 
 
 class IndexPage(FloatLayout):
 
-    def __init__(self, config, **kwargs):
-        print('init')
-        self.config = config
-        self.dde = DownloadDialogEncapsulation(self.config)
-        self.config.updated = False
+    def __init__(self, **kwargs):
+        self.file_path = None
+        self.output_path = None
+        self.dde = DownloadDialogEncapsulation()
         try:
             importlib.import_module('mathtranslate')
-            self.config.updated = True
+            self.updated = True
         except ImportError:
-            self.config.updated = False
-        if self.config.updated:
+            self.updated = False
+        if self.updated:
             import mathtranslate
+            from mathtranslate.config import config
             latest = mathtranslate.update.get_latest_version()
-            self.config.updated = mathtranslate.__version__ == latest
+            self.updated = mathtranslate.__version__ == latest
+            self.config = config
         super().__init__(**kwargs)
 
     @staticmethod
@@ -38,37 +36,36 @@ class IndexPage(FloatLayout):
 
     def show_load(self):
         # 绑定加载和取消的方法
-        content = LoadDialog(load=self._load, cancel=self.dismiss_popup, cwdir='/home/jiace')
-        #content = LoadDialog(load=self._load, cancel=self.dismiss_popup, path='/home/jiace')
+        cwdir = self.config.default_loading_dir
+        content = LoadDialog(load=self._load, cancel=self.dismiss_popup, cwdir=cwdir)
         self._popup = Popup(title="Load Latex File", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def _load(self, path, filename):
-        #content = SuccessDialog(cancel=self.success_dismiss_popup)
-        self.dismiss_popup()
-        self.config.file_path = filename
-        #self.success_popup = Popup(title="Successful Loading", content=content, size_hint=(.4, .5))
-        #self.success_popup.open()
+        self.file_path = filename
         basename = os.path.basename(filename)
+        dirname = os.path.dirname(filename)
         self.ids.loaded_filename.text = f'Loaded file: {basename}'
+        self.config.set_variable_4ui(self.config.default_loading_dir_path, dirname)
+        self.config.load()
+        self.dismiss_popup()
 
     def dismiss_popup(self):
         self._popup.dismiss()
 
     def translate_load(self):
-        if self.config.file_path is None:
+        if self.file_path is None:
             return
-        dirname = os.path.dirname(self.config.file_path)
+        dirname = os.path.dirname(self.file_path)
         filename = os.path.join(dirname, 'translate.tex')
-        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup,
-                                    file=filename, dirname=dirname)
+        content = SavePathDialog(load=self.trans_load, cancel=self.dismiss_popup, file=filename, dirname=dirname)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def trans_load(self, output_path):
-        self.config.output_path = output_path
-        self.translate()
         self.dismiss_popup()
+        self.output_path = output_path
+        self.translate()
         # popup_wait.dismiss()
 
     @staticmethod
@@ -81,14 +78,35 @@ class IndexPage(FloatLayout):
                 return selected
 
     def translate(self):
-        if not self.config.updated:
+        #self.dismiss_popup()
+        if not self.updated:
             self.dde.download_load()
-            self.config.updated = True
-
+            self.updated = True
         else:
             from Translate import translate
-            translate(self.config)
-            self.successful_translate()
+            import threading
+
+            thread = threading.Thread(target=translate, args=(self.file_path, self.output_path))
+            thread.start()
+
+            content = TranslationDialog(cancel=self.dismiss_popup)
+            self._popup = Popup(title="Translation output", content=content, size_hint=(.9, .9))
+            self._popup.open()
+
+            def update_progress(dt):
+                # replace \r to original
+                text = open(self.config.log_file, 'rb').read().decode('utf-8')
+                normal_text = re.sub('.*\r', '', text)
+                content.ids.translation_output.text = normal_text
+
+            Clock.schedule_interval(update_progress, 0.1)
+
+            def check_finish(dt):
+                if not thread.is_alive():
+                    content.ids.translation_button_close.disabled = False
+                    content.ids.translation_button_close.text = 'Close'
+
+            Clock.schedule_interval(check_finish, 0.1)
 
     def successful_translate(self):
         content = SuccessDialog(cancel=self.success_dismiss_popup)

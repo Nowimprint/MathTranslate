@@ -7,7 +7,7 @@
         Rectangle:
             pos: self.pos
             size: self.size
-            source: './static/index.jpg'
+            #source: './static/index.jpg'
 
     FloatLayout:
 
@@ -32,8 +32,8 @@
             size_hint: 0.2, 0.08
 
             pos_hint: {'x':0.7, 'top': 0.9}
-            text: 'Google'
-            values: 'Google', 'Tencent'
+            text: root.config.default_engine
+            values: 'google', 'tencent'
             on_text:
                 root.engine_show_load(self.text)
 
@@ -80,6 +80,7 @@
                 id: id_input
                 size_hint_y: .4
                 multiline: False
+                text: root.id
 
         BoxLayout:
             pos_hint_y: 0
@@ -96,6 +97,7 @@
                 id: key_input
                 size_hint_y: .4
                 multiline: False
+                text: root.key
 
         BoxLayout:
             spacing: 30
@@ -136,12 +138,8 @@
                     Spinner:
                         id:trans_from
                         size_hint: 1, 0.2
-                        text: 'English'
-                        values: 'Afrikaans','Irish','Albanian','Italian','Arabic','Japanese','Azerbaijani','Kannada','Basque','Korean','Bengali','Latin','Belarusian','Latvian','Bulgarian','Lithuanian','Catalan','Macedonian','Chinese Simplified','Malay','Chinese Traditional','Maltese','Croatian','Norwegian','Czech','Persian','Danish','Polish','Dutch','Portuguese','English','Romanian','Esperanto','Russian','Estonian','Serbian','Filipino','Slovak','Finnish','Slovenian','French','Spanish','Galician','Swahili','Georgian','Swedish','German','Tamil','Greek','Telugu','Gujarati','Thai','Haitian Creole','Turkish','Hebrew','Ukrainian','Hindi','Urdu','Hungarian','Vietnamese','Icelandic','Welsh','Indonesian','Yiddish'
-
-
-
-
+                        text: root.lang_from_show
+                        values: root.lang_list
 
             BoxLayout:
                 orientation: 'vertical'
@@ -159,10 +157,8 @@
                     Spinner:
                         id:trans_to
                         size_hint: 1, 0.2
-                        text: 'Chinese Simplified'
-                        values: 'Afrikaans','Irish','Albanian','Italian','Arabic','Japanese','Azerbaijani','Kannada','Basque','Korean','Bengali','Latin','Belarusian','Latvian','Bulgarian','Lithuanian','Catalan','Macedonian','Chinese Simplified','Malay','Chinese Traditional','Maltese','Croatian','Norwegian','Czech','Persian','Danish','Polish','Dutch','Portuguese','English','Romanian','Esperanto','Russian','Estonian','Serbian','Filipino','Slovak','Finnish','Slovenian','French','Spanish','Galician','Swahili','Georgian','Swedish','German','Tamil','Greek','Telugu','Gujarati','Thai','Haitian Creole','Turkish','Hebrew','Ukrainian','Hindi','Urdu','Hungarian','Vietnamese','Icelandic','Welsh','Indonesian','Yiddish'
-
-
+                        text: root.lang_to_show
+                        values: root.lang_list
 
         BoxLayout:
             spacing: 30

@@ -1,9 +1,7 @@
 import os
-from io import StringIO
-
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, Clock
+from kivy.properties import ObjectProperty
 from kivy.factory import Factory
 from kivy.uix.popup import Popup
 
@@ -17,16 +15,20 @@ class LoadDialog(FloatLayout):
 class EngineDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
-    # cwdir = ObjectProperty(None)
+    id = ObjectProperty(None)
+    key = ObjectProperty(None)
 
 
 class LanguageDialog(FloatLayout):
     language = ObjectProperty(None)
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
+    lang_from_show = ObjectProperty(None)
+    lang_to_show = ObjectProperty(None)
+    lang_list = ObjectProperty(None)
 
 
-class TranslationDialog(FloatLayout):
+class SavePathDialog(FloatLayout):
     file = ObjectProperty(None)
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
@@ -40,6 +42,10 @@ class TranslationDialog(FloatLayout):
                 return os.path.join(selected, 'translate.tex')
             else:
                 return selected
+
+
+class TranslationDialog(FloatLayout):
+    cancel = ObjectProperty(None)
 
 
 class WaitingDialog(FloatLayout):
@@ -56,8 +62,8 @@ class SuccessDialog(BoxLayout):
 
 
 class DownloadDialogEncapsulation:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        pass
 
     def download_load(self):
         content = DownloadDialog(load=self.download, cancel=self.download_dismiss_popup)
@@ -71,8 +77,7 @@ class DownloadDialogEncapsulation:
         self.down_popup.dismiss()
 
     def download(self):
-        os.system(f'pip install --upgrade mathtranslate')
-        self.config.updated = True
+        os.system('pip install --upgrade mathtranslate')
         self.success_load()
         self.down_popup.dismiss()
 
@@ -88,7 +93,7 @@ class DownloadDialogEncapsulation:
 Factory.register("SuccessDialog", cls=SuccessDialog)
 Factory.register("DownloadDialog", cls=DownloadDialog)
 Factory.register("WaitingDialog", cls=WaitingDialog)
-Factory.register("TranslationDialog", cls=TranslationDialog)
+Factory.register("SavePathDialog", cls=SavePathDialog)
 Factory.register("LanguageDialog", cls=LanguageDialog)
 Factory.register("EngineDialog", cls=EngineDialog)
 Factory.register("LoadDialog", cls=LoadDialog)

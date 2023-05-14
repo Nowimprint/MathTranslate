@@ -10,7 +10,6 @@ class MathTranslate(App):
         super().__init__(**kwargs)
 
     def build(self):
-        #self.icon = "./static/icon.ico"
         self.title = "MathTranslate App"
 
         self.load_kv("guipage/index.kv")  # create a index.kv file

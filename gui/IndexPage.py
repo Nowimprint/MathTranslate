@@ -107,7 +107,7 @@ class IndexPage(FloatLayout):
                     content.ids.translation_button_close.text = 'Close'
 
             Clock.schedule_interval(check_finish, 0.1)
-
+'''
     def successful_translate(self):
         content = SuccessDialog(cancel=self.success_dismiss_popup)
         self.success_popup = Popup(title="Successfully translated", content=content, size_hint=(.4, .5))
@@ -115,3 +115,4 @@ class IndexPage(FloatLayout):
 
     def success_dismiss_popup(self):
         self.success_popup.dismiss()
+'''
